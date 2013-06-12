@@ -64,7 +64,7 @@ class Quafzi_AutoShippingStatus_Test_Model_ObserverTest
 
     protected function setSourceStatuses($statuses) {
         Mage::app()->getStore()->setConfig(
-            'shipping/option/partialShipmentStatuses',
+            'shipping/option/partialShippingStatuses',
             implode(',', $statuses)
         );
     }

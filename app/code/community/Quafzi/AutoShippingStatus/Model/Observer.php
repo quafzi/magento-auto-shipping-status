@@ -10,7 +10,7 @@ class Quafzi_AutoShippingStatus_Model_Observer
     public function sales_order_shipment_save_after($event)
     {
         $order = $event->getShipment()->getOrder();
-        $sourcePath = 'shipping/option/partialShipmentStatuses';
+        $sourcePath = 'shipping/option/partialShippingStatuses';
         $partialStatuses = explode(',', Mage::getStoreConfig($sourcePath));
         $targetPath = 'shipping/option/shippedStatus';
         $shippedStatus = Mage::getStoreConfig($targetPath);
