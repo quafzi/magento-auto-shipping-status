@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category   Sales
+ * @package    Quafzi_AutoShippingStatus
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author     Thomas Birke <tbirke@netextreme.de>
+ */
+-->
+<config>
+    <modules>
+        <Quafzi_AutoShippingStatus>
+            <version>0.1.0</version>
+        </Quafzi_AutoShippingStatus>
+    </modules>
+    <global>
+        <models>
+            <autoshippingstatus>
+                <class>Quafzi_AutoShippingStatus_Model</class>
+            </autoshippingstatus>
+        </models>
+        <events>
+            <sales_order_shipment_save_after>
+                <observers>
+                    <updateOrderStatusAfterPartialShipment>
+                        <class>autoshippingstatus/observer</class>
+                        <method>sales_order_shipment_save_after</method>
+                    </updateOrderStatusAfterPartialShipment>
+                </observers>
+            </sales_order_shipment_save_after>
+        </events>
+    </global>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Quafzi_AutoShippingStatus>
+                    <files>
+                        <default>Quafzi_AutoShippingStatus.csv</default>
+                    </files>
+                </Quafzi_AutoShippingStatus>
+            </modules>
+        </translate>
+    </adminhtml>
+    <phpunit>
+        <suite>
+            <modules>
+                <Quafzi_AutoShippingStatus />
+            </modules>
+        </suite>
+    </phpunit>
+</config>
+

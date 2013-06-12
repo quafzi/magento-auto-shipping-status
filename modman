@@ -1,0 +1,3 @@
+app/etc/modules/Quafzi_AutoShippingStatus.xml app/etc/modules/Quafzi_AutoShippingStatus.xml
+app/code/community/Quafzi/AutoShippingStatus app/code/community/Quafzi/AutoShippingStatus
+app/locale/de_DE/Quafzi_AutoShippingStatus.xml app/locale/de_DE/Quafzi_AutoShippingStatus.xml
