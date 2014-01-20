@@ -1,0 +1,15 @@
+{
+    "name": "quafzi/auto-shipping-status",
+    "type": "magento-module",
+    "description": "Update shipping status from partial shipped to shipped after all items were shipped",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thomas Birke",
+            "email": "tbirke@netextreme.de"
+        }
+    ],
+    "require": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}
