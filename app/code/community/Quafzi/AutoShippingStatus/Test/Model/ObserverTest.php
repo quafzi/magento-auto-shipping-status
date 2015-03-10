@@ -10,6 +10,15 @@ class Quafzi_AutoShippingStatus_Test_Model_ObserverTest
 {
     protected $sut;
 
+    protected $changeableStatuses = [
+        'not touched',
+        'unchanged'
+    ];
+
+    protected $targetStatusComplete = 'shipped';
+
+    protected $targetStatusPartial  = 'partial';
+
     public function setUp()
     {
         $this->sut = Mage::getModel('autoshippingstatus/observer');
@@ -26,23 +35,33 @@ class Quafzi_AutoShippingStatus_Test_Model_ObserverTest
 
     public function testStillIncompleteShipment()
     {
-        $shipment = $this->getShipment($canShip = true);
-        $this->assertEquals(
-            'not touched',
-            $shipment->getOrder()->getStatus()
-        );
+        $this->setSwitchToPartial(false);
+        $shipment = $this->getShipment($canShip = true, $expectChange = false);
+        $this->assertEquals('not touched', $shipment->getOrder()->getStatus());
+
+        $this->setSwitchToPartial(true);
+        $shipment = $this->getShipment($canShip = true, $expectChange = true);
+        $this->assertEquals('partial', $shipment->getOrder()->getStatus());
     }
 
     public function testCompleteShipment()
     {
-        $shipment = $this->getShipment($canShip = false);
-        $this->assertEquals('updated', $shipment->getOrder()->getStatus());
+        $this->setSwitchToShipped(false);
+        $shipment = $this->getShipment($canShip = false, $expectChange = false);
+        $this->assertEquals('not touched', $shipment->getOrder()->getStatus());
+
+        $this->setSwitchToShipped(true);
+        $shipment = $this->getShipment($canShip = false, $expectChange = true);
+        $this->assertEquals('shipped', $shipment->getOrder()->getStatus());
     }
 
-    protected function getShipment($canShip)
+    protected function getShipment($canShip, $expectChange)
     {
-        $this->setSourceStatuses(array('unchanged', 'not touched'));
-        $this->setTargetStatus('updated');
+        $this->setCompleteSourceStatuses($this->changeableStatuses);
+        $this->setCompleteTargetStatus($this->targetStatusComplete);
+        $this->setPartialSourceStatuses($this->changeableStatuses);
+        $this->setPartialTargetStatus($this->targetStatusPartial);
+
         $order = $this->getModelMock(
             'sales/order',
             array('canShip', 'save')
@@ -50,9 +69,9 @@ class Quafzi_AutoShippingStatus_Test_Model_ObserverTest
         $order->expects($this->any())
             ->method('canShip')
             ->will($this->returnValue($canShip));
-        $order->expects($canShip ? $this->never() : $this->once())
+        $order->expects($expectChange ? $this->once() : $this->never())
             ->method('save');
-        $order->setStatus('not touched');
+        $order->setStatus(current($this->changeableStatuses));
         $shipment = Mage::getModel('sales/order_shipment')
             ->setOrder($order);
         Mage::dispatchEvent(
@@ -62,16 +81,44 @@ class Quafzi_AutoShippingStatus_Test_Model_ObserverTest
         return $shipment;
     }
 
-    protected function setSourceStatuses($statuses) {
+    protected function setSwitchToPartial($enable) {
         Mage::app()->getStore()->setConfig(
-            'shipping/option/partialShippingStatuses',
+            'shipping/option/switchToPartial',
+            $enable
+        );
+    }
+
+    protected function setPartialSourceStatuses($statuses) {
+        Mage::app()->getStore()->setConfig(
+            'shipping/option/statusBeforeSwitchToPartial',
             implode(',', $statuses)
         );
     }
 
-    protected function setTargetStatus($status) {
+    protected function setPartialTargetStatus($status) {
         Mage::app()->getStore()->setConfig(
-            'shipping/option/shippedStatus',
+            'shipping/option/statusAfterSwitchToPartial',
+            $status
+        );
+    }
+
+    protected function setSwitchToShipped($enable) {
+        Mage::app()->getStore()->setConfig(
+            'shipping/option/switchToShipped',
+            $enable
+        );
+    }
+
+    protected function setCompleteSourceStatuses($statuses) {
+        Mage::app()->getStore()->setConfig(
+            'shipping/option/statusBeforeSwitchToShipped',
+            implode(',', $statuses)
+        );
+    }
+
+    protected function setCompleteTargetStatus($status) {
+        Mage::app()->getStore()->setConfig(
+            'shipping/option/statusAfterSwitchToShipped',
             $status
         );
     }

@@ -10,10 +10,15 @@
 <config>
     <modules>
         <Quafzi_AutoShippingStatus>
-            <version>0.1.0</version>
+            <version>1.0.0</version>
         </Quafzi_AutoShippingStatus>
     </modules>
     <global>
+        <helpers>
+            <autoshippingstatus>
+                <class>Quafzi_AutoShippingStatus_Helper</class>
+            </autoshippingstatus>
+        </helpers>
         <models>
             <autoshippingstatus>
                 <class>Quafzi_AutoShippingStatus_Model</class>
@@ -29,6 +34,17 @@
                 </observers>
             </sales_order_shipment_save_after>
         </events>
+        <resources>
+            <quafzi_autoshippingstatus_setup>
+                <setup>
+                    <module>Quafzi_AutoShippingStatus</module>
+                    <class>Mage_Core_Model_Resource_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </quafzi_autoshippingstatus_setup>
+        </resources>
     </global>
     <adminhtml>
         <translate>
@@ -41,6 +57,13 @@
             </modules>
         </translate>
     </adminhtml>
+    <default>
+        <shipping>
+            <option>
+                <switchToShipped>1</switchToShipped>
+            </option>
+        </shipping>
+    </default>
     <phpunit>
         <suite>
             <modules>

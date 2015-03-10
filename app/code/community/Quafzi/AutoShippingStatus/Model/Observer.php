@@ -10,15 +10,29 @@ class Quafzi_AutoShippingStatus_Model_Observer
     public function sales_order_shipment_save_after($event)
     {
         $order = $event->getShipment()->getOrder();
-        $sourcePath = 'shipping/option/partialShippingStatuses';
-        $partialStatuses = explode(',', Mage::getStoreConfig($sourcePath));
-        $targetPath = 'shipping/option/shippedStatus';
-        $shippedStatus = Mage::getStoreConfig($targetPath);
-        if (false == $order->canShip()
-            && in_array($order->getStatus(), $partialStatuses)
-        ) {
-            $order->setStatus($shippedStatus)
-                ->save();
+        if ((bool)(int)Mage::getStoreConfig('shipping/option/switchToPartial')) {
+            $sourcePath = 'shipping/option/statusBeforeSwitchToPartial';
+            $sourceStatuses = explode(',', Mage::getStoreConfig($sourcePath));
+            $targetPath = 'shipping/option/statusAfterSwitchToPartial';
+            $shippedStatus = Mage::getStoreConfig($targetPath);
+            if (true == $order->canShip()
+                && in_array($order->getStatus(), $sourceStatuses)
+            ) {
+                $order->setStatus($shippedStatus)
+                    ->save();
+            }
+        }
+        if ((bool)(int)Mage::getStoreConfig('shipping/option/switchToShipped')) {
+            $sourcePath = 'shipping/option/statusBeforeSwitchToShipped';
+            $sourceStatuses = explode(',', Mage::getStoreConfig($sourcePath));
+            $targetPath = 'shipping/option/statusAfterSwitchToShipped';
+            $shippedStatus = Mage::getStoreConfig($targetPath);
+            if (false == $order->canShip()
+                && in_array($order->getStatus(), $sourceStatuses)
+            ) {
+                $order->setStatus($shippedStatus)
+                    ->save();
+            }
         }
     }
 }

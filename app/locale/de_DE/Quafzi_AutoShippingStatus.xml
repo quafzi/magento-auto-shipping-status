@@ -1,3 +1,7 @@
 "Order Status for partial/waiting shipment","Bestellstatus für unvollständige oder wartende Lieferungen"
 "Order status after shipment","Bestellstatus nach Versand"
+"Order status of partial orders to be switched to partial shipping status","Bestellstatus, von denen bei Teilsendungen auf Teilsendungsstatus gewechselt werden soll"
+"Order status of partial orders to be switched to","Bestellstatus, zu dem bei Teilsendungen gewechselt werden soll"
+"Switch to partial shipping status, until all items were sent","Bei Teilsendungen auf Teilsendungsstatus wechseln"
+"Switch to shipped status, when all items were sent","Bestellstatus nach vollständigem Versand ändern"
 "This will be applied for unpaid orders only","Dies wirkt sich nur auf unbezahlte Bestellungen aus."
